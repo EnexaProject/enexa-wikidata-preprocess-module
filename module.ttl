@@ -1,0 +1,29 @@
+# Don't change this file! It is generated based on module.ttl.template.
+@base           <http://w3id.org/dice-research/enexa/module/wikidata-preproc/> .
+@prefix alg:    <http://www.w3id.org/dice-research/ontologies/algorithm/2023/06/> .
+@prefix dcat:   <http://www.w3.org/ns/dcat#> .
+@prefix enexa:  <http://w3id.org/dice-research/enexa/ontology#> .
+@prefix iana-a: <https://www.iana.org/assignments/media-types/application/> .
+@prefix iana-t: <https://www.iana.org/assignments/media-types/text/> .
+@prefix hobbit: <http://w3id.org/hobbit/vocab#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix prov:   <http://www.w3.org/ns/prov#> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+
+<1.0.0> a enexa:Module ;
+	rdfs:label "ENEXA Wikidata preprocessing Module"@en ;
+	rdfs:comment "This module allows the preprocessing of Wikidata triples by translating Wikidata properties like P31 into rdf/rdfs properties."@en ;
+	hobbit:image <urn:container:docker:image:hub.cs.upb.de/enexa/images/enexa-wikidata-preprocess-module:1.0.0> ;
+	alg:parameter <parameter/input> ;
+	alg:produces <result/output> .
+
+<parameter/input> a alg:Parameter ;
+	rdfs:label "Input dataset" ;
+	rdfs:comment "An RDF dataset that comprises triples of Wikidata." .	
+
+<result/output> a alg:Result ;
+	rdfs:label "Output dataset" ;
+	rdfs:comment "The output dataset that is created as result of the transformation." ;
+	rdfs:range prov:Entity .
+
