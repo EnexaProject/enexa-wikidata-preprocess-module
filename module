@@ -1,0 +1,37 @@
+#!/bin/sh
+set -eu
+
+# If this is a test run
+if [ "${TEST_RUN:-false}" = true ]
+then  
+  # things which ENEXA is supposed to do
+  mkdir -p $ENEXA_MODULE_INSTANCE_DIRECTORY
+  echo "INSERT DATA { GRAPH <$ENEXA_META_DATA_GRAPH> {
+    <$ENEXA_MODULE_INSTANCE_IRI> <http://w3id.org/dice-research/enexa/module/wikidata-preproc/parameter/input> <http://example.org/file/data1.nt> .
+    <http://example.org/file/data1.nt> <http://w3id.org/dice-research/enexa/ontology#location> \"enexa-dir://data1.nt\" .
+    }}" \
+    | sparql-update "$ENEXA_META_DATA_ENDPOINT"
+fi
+
+INPUT_FILE=$(enexa-parameter "http://w3id.org/dice-research/enexa/module/wikidata-preproc/parameter/input")
+#OUTPUT_FILE="${ENEXA_MODULE_INSTANCE_DIRECTORY}/output.nt"
+OUTPUT_FILE=$(mktemp)
+
+echo "Writing update results of $INPUT_FILE into $OUTPUT_FILE"
+
+# Copy input file to output file
+cp "$INPUT_FILE" "$OUTPUT_FILE"
+# Replace the properties we are interested in
+# Replace P31 with rdf:type
+grep "https://www.wikidata.org/wiki/P31" "$INPUT_FILE" | grep -v "http://www.w3.org/2002/07/owl#equivalentProperty" | sed "s=https://www.wikidata.org/wiki/P31=http://www.w3.org/1999/02/22-rdf-syntax-ns#type=g" >> "$OUTPUT_FILE"
+# Replace P361 with rdfs:member
+grep "https://www.wikidata.org/wiki/P361" "$INPUT_FILE" | grep -v "http://www.w3.org/2002/07/owl#equivalentProperty" | sed "s=https://www.wikidata.org/wiki/P361=http://www.w3.org/2000/01/rdf-schema#member=g" >> "$OUTPUT_FILE"
+# Replace P279 with rdfs:subClassOf
+grep "https://www.wikidata.org/wiki/P279" "$INPUT_FILE" | grep -v "http://www.w3.org/2002/07/owl#equivalentProperty" | sed "s=https://www.wikidata.org/wiki/P279=http://www.w3.org/2000/01/rdf-schema#subClassOf=g" >> "$OUTPUT_FILE"
+# Replace P1647 with rdfs:subPropertyOf
+grep "https://www.wikidata.org/wiki/P1647" "$INPUT_FILE" | grep -v "http://www.w3.org/2002/07/owl#equivalentProperty" | sed "s=https://www.wikidata.org/wiki/P1647=http://www.w3.org/2000/01/rdf-schema#subPropertyOf=g" >> "$OUTPUT_FILE"
+# Add newly created file
+
+FILE_IRI=$(enexa-add-file "$OUTPUT_FILE" "http://w3id.org/dice-research/enexa/module/wikidata-preproc/parameter/output")
+
+echo "Added $FILE_IRI"
