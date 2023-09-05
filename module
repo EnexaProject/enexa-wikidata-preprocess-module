@@ -32,6 +32,6 @@ grep "https://www.wikidata.org/wiki/P279" "$INPUT_FILE" | grep -v "http://www.w3
 grep "https://www.wikidata.org/wiki/P1647" "$INPUT_FILE" | grep -v "http://www.w3.org/2002/07/owl#equivalentProperty" | sed "s=https://www.wikidata.org/wiki/P1647=http://www.w3.org/2000/01/rdf-schema#subPropertyOf=g" >> "$OUTPUT_FILE"
 # Add newly created file
 
-FILE_IRI=$(enexa-add-file "$OUTPUT_FILE" "http://w3id.org/dice-research/enexa/module/wikidata-preproc/parameter/output")
+FILE_IRI=$(enexa-add-file "$OUTPUT_FILE" "http://w3id.org/dice-research/enexa/module/wikidata-preproc/result/output")
 
 echo "Added $FILE_IRI"
