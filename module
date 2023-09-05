@@ -15,7 +15,8 @@ fi
 
 INPUT_FILE=$(enexa-parameter "http://w3id.org/dice-research/enexa/module/wikidata-preproc/parameter/input")
 #OUTPUT_FILE="${ENEXA_MODULE_INSTANCE_DIRECTORY}/output.nt"
-OUTPUT_FILE=$(mktemp)
+# Create temporary output file (ends with .nt since we write an NT file)
+OUTPUT_FILE=$(mktemp XXXXXXXXXX.nt)
 
 echo "Writing update results of $INPUT_FILE into $OUTPUT_FILE"
 
